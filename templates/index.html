@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finance Chatbot</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap" rel="stylesheet">
+    <style>
+        @keyframes noiseAnimation {
+
+            0%,
+            100% {
+                background-position: 0 0;
+            }
+
+            10% {
+                background-position: -5% -5%;
+            }
+
+            20% {
+                background-position: -10% 5%;
+            }
+
+            30% {
+                background-position: 5% -10%;
+            }
+
+            40% {
+                background-position: -5% 15%;
+            }
+
+            50% {
+                background-position: 10% 5%;
+            }
+
+            60% {
+                background-position: -10% -15%;
+            }
+
+            70% {
+                background-position: 15% 10%;
+            }
+
+            80% {
+                background-position: -15% -5%;
+            }
+
+            90% {
+                background-position: 5% 15%;
+            }
+        }
+
+        @keyframes welcomeAnimation {
+            0% {
+                transform: translateX(-100%);
+                opacity: 0;
+            }
+
+            100% {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes stocksAnimation {
+            0% {
+                transform: translateX(0);
+            }
+
+            100% {
+                transform: translateX(-100%);
+            }
+        }
+
+        .stocks-background {
+            position: absolute;
+            width: 100%;
+            height: 200px;
+            font-size: 10rem;
+            color: rgba(255, 255, 255, 0.05);
+            font-weight: bold;
+            white-space: nowrap;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .stocks-background-top {
+            top: 0;
+            transform: rotate(15deg);
+        }
+
+        .stocks-background-bottom {
+            bottom: 0;
+            transform: rotate(15deg);
+        }
+
+        .stocks-text {
+            display: inline-block;
+            animation: stocksAnimation 20s linear infinite;
+        }
+
+        .welcome-title {
+            font-size: 4.5rem;
+            margin-bottom: 20px;
+            animation: welcomeAnimation 1.5s ease-out;
+        }
+
+        body {
+            font-family: 'Orbitron', sans-serif;
+            background-color: #1E90FF;
+            background-image: linear-gradient(135deg, #00008B, #1E90FF);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: white;
+        }
+
+        .chat-container {
+            background-color: rgba(0, 0, 139, 0.9);
+            padding: 20px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .chat-header {
+            text-align: center;
+            font-size: 2rem;
+            font-weight: bold;
+            animation: typewriter 4s steps(500) infinite alternate, blink 800ms steps(2) infinite normal;
+            white-space: nowrap;
+            overflow: hidden;
+            border-right: 5px solid black;
+        }
+
+        @keyframes typewriter {
+            from {
+                width: 0;
+            }
+
+            to {
+                width: 100%;
+            }
+        }
+
+        @keyframes blink {
+            from {
+                border-color: black;
+            }
+
+            to {
+                border-color: transparent;
+            }
+        }
+
+        .chat-box {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 10px;
+            overflow-y: auto;
+            max-height: 400px;
+            flex-grow: 1;
+        }
+
+        .footer {
+            background: #1564ae;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            font-size: 14px;
+            font-family: Arial, sans-serif;
+        }
+
+        .footer p {
+            margin: 0;
+        }
+
+        .message {
+            margin: 5px 0;
+        }
+
+        .user-message {
+            text-align: right;
+            color: #1E90FF;
+            font-weight: bold;
+        }
+
+        .bot-message {
+            text-align: left;
+            color: #FFD700;
+        }
+
+        .input-container {
+            display: flex;
+            gap: 10px;
+        }
+
+        .chat-input {
+            flex-grow: 1;
+            padding: 10px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 10px;
+            outline: none;
+        }
+
+        .send-btn {
+            padding: 10px 20px;
+            font-size: 1rem;
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            border: none;
+            border-radius: 10px;
+            color: black;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .send-btn:hover {
+            background: linear-gradient(135deg, #FFA500, #FFD700);
+        }
+
+        /* Markdown formatting styles */
+        .bot-message strong {
+            color: #FFD700;
+            font-weight: bold;
+        }
+
+        .bot-message h1 {
+            color: #1E90FF;
+            font-size: 1.5rem;
+            margin: 10px 0;
+        }
+
+        .bot-message h2 {
+            color: #00BFFF;
+            font-size: 1.2rem;
+            margin: 8px 0;
+        }
+
+        .bot-message ul {
+            padding-left: 20px;
+            margin: 5px 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="stocks-background stocks-background-top">
+        <div class="stocks-text">Buddy-Bot Buddy-Bot Buddy-Bot Buddy-Bot Buddy-Bot Buddy-Bot Buddy-Bot Buddy-Bot</div>
+    </div>
+    <div class="chat-container">
+        <div class="chat-header">
+            Buddy-Bot
+        </div>
+        <div class="chat-box" id="chatBox"></div>
+        <div class="input-container">
+            <input type="text" id="userInput" class="chat-input" placeholder="Type your message here..."
+                aria-label="User input">
+            <button id="sendBtn" class="send-btn" aria-label="Send message">Send</button>
+        </div>
+    </div>
+    <div class="stocks-background stocks-background-bottom">
+        <div class="stocks-text">Buddy-Bot Buddy-Bot Buddy-Bot Buddy-Bot Buddy-Bot Buddy-Bot Buddy-Bot Buddy-Bot</div>
+    </div>
+    <div class="footer">
+        <p>&copy; 2024 CHEF-BOT. All Rights Reserved.</p>
+        <p>Made by Akash Singh J</p>
+    </div>
+
+    <script>
+        function formatMarkdown(text) {
+            // Bold formatting
+            text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            
+            // Heading formatting
+            text = text.replace(/^# (.*)/gm, '<h1>$1</h1>');
+            text = text.replace(/^## (.*)/gm, '<h2>$1</h2>');
+            
+            // List formatting
+            text = text.replace(/^\* (.*)/gm, '<li>$1</li>');
+            text = text.replace(/(<li>.*<\/li>\n?)+/g, function (match) {
+                return '<ul>' + match + '</ul>';
+            });
+            
+            // Newline to break tag
+            text = text.replace(/\n/g, '<br>');
+            
+            return text;
+        }
+
+        const chatBox = document.getElementById('chatBox');
+        const userInput = document.getElementById('userInput');
+        const sendBtn = document.getElementById('sendBtn');
+
+        function appendMessage(message, sender) {
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('message', `${sender}-message`);
+            
+            // Apply markdown formatting for bot messages
+            if (sender === 'bot') {
+                messageDiv.innerHTML = formatMarkdown(message);
+            } else {
+                messageDiv.textContent = message;
+            }
+            
+            chatBox.appendChild(messageDiv);
+            chatBox.scrollTop = chatBox.scrollHeight; 
+        }
+
+        function removeLastBotMessage() {
+            const botMessages = chatBox.querySelectorAll('.bot-message');
+            if (botMessages.length > 0) {
+                chatBox.removeChild(botMessages[botMessages.length - 1]);
+            }
+        }
+
+        async function sendMessage() {
+            const userMessage = userInput.value.trim();
+            if (!userMessage || userMessage.length < 2) return;  
+
+            appendMessage(userMessage, 'user');
+            userInput.value = '';
+
+            appendMessage("Bot is typing...", 'bot');
+            chatBox.scrollTop = chatBox.scrollHeight;  
+
+            setTimeout(async () => {
+                try {
+                    const response = await fetch('/chat', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ message: userMessage })
+                    });
+
+                    removeLastBotMessage();
+
+                    if (response.ok) {
+                        const data = await response.json();
+                        appendMessage(data.response, 'bot');
+                    } else {
+                        appendMessage("Oops! Something went wrong. Please try again.", 'bot');
+                    }
+                } catch (error) {
+                    removeLastBotMessage();
+                    console.error('Error:', error);
+                    appendMessage("Unable to connect to the server. Please try again later.", 'bot');
+                }
+            }, 1000);  
+        }
+
+        sendBtn.addEventListener('click', sendMessage);
+
+        userInput.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        });
+    </script>
+</body>
+
+</html>
